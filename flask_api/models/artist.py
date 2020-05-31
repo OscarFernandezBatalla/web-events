@@ -17,12 +17,11 @@ class ArtistModel(db.Model):
         self.genre = genre
 
     def json(self):
-        return {'artist': {
+        return {
                 "id": self.id,
                 "name": self.name,
                 "country": self.country,
                 "genre": self.genre
-                }
         }
 
     def save_to_db(self):

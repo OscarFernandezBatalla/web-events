@@ -65,11 +65,10 @@ class AccountsModel(db.Model):
         return user
 
     def json(self):
-        return {'accounts': {
+        return {
                 "username": self.username,
                 "available_money": self.available_money,
                 "is_admin": self.is_admin
-                }
         }
 
     def save_to_db(self):

@@ -5,7 +5,6 @@ from models.artist import ArtistModel
 class Artist(Resource):
 
     def get(self, id):
-
         artist = ArtistModel.find_by_id(id)
         return artist.json(), 200 if artist else 404
 

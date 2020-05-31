@@ -28,7 +28,7 @@ class EventModel(db.Model):
 
 
     def json(self):
-        return {'event': {
+        return {
                     "id": self.id,
                     "name": self.name,
                     "place": self.place,
@@ -38,7 +38,6 @@ class EventModel(db.Model):
                     "price": self.price,
                     "total_available_tickets": self.total_available_tickets
                 }
-        }
 
     def save_to_db(self):
         try:

@@ -1,8 +1,5 @@
 <template>
   <div id="app">
-	  
-
-
   	<div class="container" v-if="!show">
   		<h2>Sign in</h2>
 	    <div class="form-label-group">
@@ -24,7 +21,6 @@
 		</div>
 
 	</div>
-	
 	<div v-if="show">
 	<button class="btn btn-danger" @click="showSignIn(false)" style="float:right">X</button>
 	<h2>Create account</h2>
@@ -110,12 +106,13 @@ export default {
 
 	  axios.get(path)
 	    .then((res) => {
-	      this.is_admin = res.data.accounts.is_admin
-	      this.money_available = res.data.accounts.available_money
+	      this.is_admin = res.data.is_admin
+	      this.money_available = res.data.available_money
 
-	       alert("Successful logged")
+		   alert("Successful logged")
+		   console.log(this.is_admin)
 
-          this.$router.replace({ path: '/', query: { username: this.username ,logged: this.logged , token: this.token , money_available: this.money_available, is_admin : this.is_admin} })
+          this.$router.replace({ path: '/', query: { username: this.username ,logged: this.logged , token: this.token} })
 
 	    })
 	    .catch((error) => {

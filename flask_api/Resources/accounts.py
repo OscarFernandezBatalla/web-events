@@ -6,7 +6,9 @@ from models.orders import OrdersModel
 class Accounts(Resource):
 
     def get(self, username):
+
         account = AccountsModel.find_by_username(username)
+        print(account.is_admin)
         return account.json()
 
     def post(self):
