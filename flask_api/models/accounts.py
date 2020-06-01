@@ -26,8 +26,9 @@ class AccountsModel(db.Model):
 
     def __init__(self, username,available_money=200, is_admin=0):
         self.username = username
-        self.available_money = available_money
         self.is_admin = is_admin
+        self.available_money = available_money
+
 
     def hash_password(self, password):
         print("hash de password:")
@@ -67,8 +68,8 @@ class AccountsModel(db.Model):
     def json(self):
         return {
                 "username": self.username,
-                "available_money": self.available_money,
-                "is_admin": self.is_admin
+                "is_admin": self.is_admin,
+                "available_money": self.available_money
         }
 
     def save_to_db(self):

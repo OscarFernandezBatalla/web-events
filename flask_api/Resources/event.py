@@ -7,7 +7,10 @@ class Event(Resource):
 
     def get(self, id):
         event = EventModel.find_by_id(id)
-        return event.json(), 200 if event else 404
+        if event:
+            return {"event" : event.json()}, 200
+        return {"message" : "Event not found"}, 404
+
 
     @auth.login_required(role='admin')
     def post(self):
@@ -68,8 +71,11 @@ class EventList(Resource):
 
 class EventArtistList(Resource):
     def get(self, id):
-        artists = EventModel.find_by_artists(id)
-        return {'artists': [artist.json() for artist in artists]}, 200 if artists else 404
+        event = EventModel.find_by_artists(id)
+        if event:
+            return {'artists': [artist.json() for artist in event.artists]}, 200
+        return {"message" : "Event with ['id': " + str(id) + "] Not Found"}, 404
+
 
 
 
@@ -86,13 +92,18 @@ class EventArtist(Resource):
     '''
 
     def get(self, id_event, id_artist):
-        artists = EventModel.find_by_id_all_artists(id_event)
-        artis = ArtistModel.find_by_id(id_artist)
 
-        if artis in artists:
-            return artis.json(),200
+        event = EventModel.find_by_id(id_event)
+        if not event:
+            return {"message" : "Event with ['id': " + str(id_event) + "] Not Found"}, 404
+
+        artists = EventModel.find_by_id_all_artists(id_event)
+        artist = ArtistModel.find_by_id(id_artist)
+
+        if artist in artists:
+            return artist.json(), 200
         else:
-            return {},404
+            return {"message" : "Artist with ['id': " + str(id_artist) + "] not in Event with ['id': " + str(id_event) + "]"}, 404
 
     @auth.login_required(role='admin')
     def post(self, id_event):
@@ -123,4 +134,6 @@ class EventArtist(Resource):
 class ArtistEventsList(Resource):
     def get(self, id):
         events = EventModel.find_event_by_artists(id)
-        return {'events': [event.json() for event in events]}, 200 if events else 404
+        if events:
+            return {'events': [event.json() for event in events]}, 200
+        return {"message" : "Artist with ['id': " + str(id) + "] Not Found"}, 404

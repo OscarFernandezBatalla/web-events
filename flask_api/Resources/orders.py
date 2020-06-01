@@ -6,7 +6,9 @@ class Orders(Resource):
 
     def get(self, username):
         orders = OrdersModel.find_by_username(username)
-        return {'orders': [order.json() for order in orders]}, 200 if orders else 404
+        if orders:
+            return {'orders': [order.json() for order in orders]}, 200
+        return {"message": "User not found"}, 404
 
     @auth.login_required(role='user')
     def post(self, username):
@@ -79,16 +81,7 @@ class Orders(Resource):
     #    return {"message": "Bad authorization user"}, 400
 
 
-
-
-
-
 class OrdersList(Resource):
     def get(self):
         orders = OrdersModel.get_all_orders()
-        return {'orders': [order.json() for order in orders]}
-
-
-
-
-
+        return {'orders': [order.json() for order in orders]}, 200

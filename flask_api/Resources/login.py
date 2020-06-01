@@ -4,8 +4,6 @@ from models.orders import OrdersModel
 
 class Login(Resource):
 
-
-
     def post(self):
         parser = reqparse.RequestParser()  # create parameters parser from request
         ## define al input parameters need and its type
@@ -15,28 +13,19 @@ class Login(Resource):
 
         data = parser.parse_args()
 
+        if not data.password:
+            return {"message": {"password": "Account not valid : 'password' not provided"}}, 400
+
         account = AccountsModel.find_by_username(data.username)
         if not account:
-            return 404, "Username not found"
+            return {"message": "Invalid password"}, 400
 
         login_successful = account.verify_password(password=data.password)
         if not login_successful:
-            return 400, "Incorrect password"
+            return {"message": "Invalid password"}, 400
 
         token = account.generate_auth_token()
-
         return {'token': token.decode('ascii')}, 200
-
-    @auth.login_required(role='admin')
-    def delete(self, username):
-        orders = OrdersModel.find_by_username(username)
-        for order in orders:
-            order.delete_from_db()
-
-        account = AccountsModel.find_by_username(username)
-        account.delete_from_db()
-
-
 
 
 class AccountsList(Resource):

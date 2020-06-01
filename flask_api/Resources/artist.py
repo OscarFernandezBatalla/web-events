@@ -6,7 +6,9 @@ class Artist(Resource):
 
     def get(self, id):
         artist = ArtistModel.find_by_id(id)
-        return artist.json(), 200 if artist else 404
+        if artist:
+            return {"artist": artist.json()}, 200
+        return {"message": "Artist not found"}, 404
 
     @auth.login_required(role='admin')
     def post(self):
@@ -31,12 +33,12 @@ class Artist(Resource):
 
 
     @auth.login_required(role='admin')
-    def delete(self,id):
+    def delete(self, id):
         artist = ArtistModel.find_by_id(id)
         artist.delete_from_db()
 
     @auth.login_required(role='admin')
-    def put(self,id):
+    def put(self, id):
         artist=ArtistModel.find_by_id(id)
 
         if(artist is None):

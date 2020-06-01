@@ -106,7 +106,7 @@ class EventModel(db.Model):
     @classmethod
     def find_by_artists(cls, id):
         event = cls.query.filter(cls.id == id).first()
-        return event.artists
+        return event
 
     @classmethod
     def find_event_by_artists(cls, id):

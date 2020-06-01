@@ -6,10 +6,10 @@ from models.orders import OrdersModel
 class Accounts(Resource):
 
     def get(self, username):
-
         account = AccountsModel.find_by_username(username)
-        print(account.is_admin)
-        return account.json()
+        if account:
+            return {"account": account.json()}, 200
+        return {"message": "User not found"}, 404
 
     def post(self):
         parser = reqparse.RequestParser()  # create parameters parser from request
@@ -19,12 +19,24 @@ class Accounts(Resource):
         parser.add_argument('password', type=str)
 
         data = parser.parse_args()
+        if not data.password:
+            return {
+                "message": {
+                    "password": "Account not valid : 'password' not provided"
+                }
+            }, 400
 
-        account = AccountsModel(data.username)
-        account.hash_password(data.password)
-        account.save_to_db()
+        look_for_account = AccountsModel.find_by_username(data.username)
 
-        #return
+        if not look_for_account:
+            account = AccountsModel(data.username)
+            account.hash_password(data.password)
+            account.save_to_db()
+            return {"username" : account.username, "password" : account.password}, 201
+        else:
+            return {"message": "An user with same username [" + look_for_account.username + "] already exists"}, 409
+
+
 
     @auth.login_required(role='admin')
     def delete(self, username):

@@ -16,7 +16,7 @@ class OrdersModel(db.Model):
 
     def json(self):
         event = EventModel.find_by_id(self.id_event)
-        return {'orders': {
+        return {
             "id": self.id,
             "username": self.username,
             "event_name": event.name,
@@ -24,7 +24,6 @@ class OrdersModel(db.Model):
             "event_city": event.city,
             "tickets_bought": self.tickets_bought
         }
-    }
 
 
 
