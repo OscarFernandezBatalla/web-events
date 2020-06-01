@@ -1,17 +1,18 @@
 <template>
   <div id="app" style="margin-top:0px">
 
+
     
 
 
 
     <div class="container" style="max-width: 100%; align-items:center; position: fixed; top: 0; background-color:#343a40">
-      <div v-if=!logged class="container" style="display: inline-block; width:auto;float:left; text-align:left">
-        <h4> Total tickets bought: {{ tickets_bought }} </h4>
+      <div v-if=logged class="container" style="display: inline-block; width:auto;float:left; text-align:left">
+        <h4> Total tickets in cart: {{ tickets_bought }} </h4>
         <h4> Money available: {{ money_available }} </h4>
       </div>
 
-      <div class="container" style="display: inline-block; float:right; width:auto; margin-top:10px">
+      <div class="container" style="display: inline-block; float:right; width:auto; margin-top:10px; margin-bottom:7px">
         <a href="#" style="display:inline-block;" v-if="!is_admin" class="btn btn-sm animated-button thar-two" :disabled="show" @click="showCartView(true)">View Cart</a>
         <a href="#" style="display:inline-block;" class="btn btn-sm animated-button thar-two" @click="login()">{{ this.textLoginButton() }}</a>
       </div>
@@ -27,6 +28,10 @@
 
 
 
+   
+
+
+
 
     <div v-if="is_admin">
       <a href="#" style="display:inline-block; width:auto" class="btn btn-sm animated-button thar-two" @click="showAddNewEvent(true)"> Add New Event </a>
@@ -38,7 +43,7 @@
     <div v-if="show_form_new_event">
       <h3>Add New Event</h3>
       <button class="btn btn-lg btn-blue-cross fixed" type="submit" @click="showAddNewEvent(false)" style="float:right">X</button>
-        <b-form >
+        <b-form style="color: #FFF">
           <b-form-group
             id="input-group-1"
             label="Name:"
@@ -129,15 +134,15 @@
               style="width:300px; margin-left:auto;margin-right:auto;"
             ></b-form-input>
           </b-form-group>
-          <a href="#" style="width:300px" class="btn btn-sm animated-button thar-two"  @click="submitAddEvent()" >Submit</a>
-          <a href="#" style="width:300px" class="btn btn-sm animated-button thar-two-red" @click="onReset()">Reset</a>
+          <a href="#" style="width:300px; margin-top: 7px" class="btn btn-sm animated-button thar-two"  @click="submitAddEvent()" >Submit</a>
+          <a href="#" style="width:300px; margin-top: 7px" class="btn btn-sm animated-button thar-two-red" @click="onReset()">Reset</a>
         </b-form>
       </div>
 
     <div v-if="show_form_update_event">
       <h3>UPDATE EVENT</h3>
       <button class="btn btn-lg btn-blue-cross fixed" type="submit" @click="showUpdateEvent(false)" style="float:right">X</button>
-        <b-form >
+        <b-form style="color: #FFF">
           <b-form-group
             id="input-group-0"
             label="Id:"
@@ -244,30 +249,15 @@
               style="width:300px; margin-left:auto;margin-right:auto;"
             ></b-form-input>
           </b-form-group>
-          <a href="#" style="width:300px" class="btn btn-sm animated-button thar-two"  @click="submitUpdate()" >Submit</a>
-          <a href="#" style="width:300px" class="btn btn-sm animated-button thar-two-red" @click="onResetUpdate()">Reset</a>
+          <a href="#" style="width:300px; margin-top: 7px" class="btn btn-sm animated-button thar-two"  @click="submitUpdate()" >Submit</a>
+          <a href="#" style="width:300px; margin-top: 7px" class="btn btn-sm animated-button thar-two-red" @click="onResetUpdate()">Reset</a>
         </b-form>
       </div>
 
     <div v-if="show_form_add_artist">
       <h3>Add artist</h3>
       <button class="btn btn-lg btn-blue-cross fixed" type="submit" @click="showAddArtist(false)" style="float:right">X</button>
-        <b-form >
-          <b-form-group
-            id="input-group-1"
-            label="Id artist:"
-            label-for="input-1"
-            style="width:300px; margin-left:auto;margin-right:auto;">
-            <b-form-input
-              id="input-1"
-              type="text"
-              v-model="addArtistForm.id"
-              required
-              placeholder="Enter artist id"
-              style="width:300px; margin-left:auto;margin-right:auto;"
-            ></b-form-input>
-          </b-form-group>
-
+        <b-form style="color: #FFF">
 
           <b-form-group
             id="input-group-1"
@@ -311,13 +301,13 @@
               type="text"
               v-model="addArtistForm.genre"
               required
-              placeholder="Enter date"
+              placeholder="Enter genre"
               style="width:300px; margin-left:auto;margin-right:auto;"
             ></b-form-input>
           </b-form-group>
 
-          <a href="#" style="width:300px" class="btn btn-sm animated-button thar-two"  @click="submitAddArtist()" >Submit</a>
-          <a href="#" style="width:300px" class="btn btn-sm animated-button thar-two-red" @click="onResetAddArtistInEvent()">Reset</a>
+          <a href="#" style="width:300px; margin-top: 7px" class="btn btn-sm animated-button thar-two"  @click="submitAddArtist()" >Submit</a>
+          <a href="#" style="width:300px; margin-top: 7px" class="btn btn-sm animated-button thar-two-red" @click="onResetAddArtistInEvent()">Reset</a>
 
         </b-form>
       </div>
@@ -325,8 +315,7 @@
     <div v-if="show_form_delete_artist">
       <h3>DELETE ARTIST</h3>
       <button class="btn btn-lg btn-blue-cross fixed" type="submit" @click="showDeleteArtist(false)" style="float:right">X</button>
-        <b-form >
-
+        <b-form style="color: #FFF">
           <b-form-group
             id="input-group-1"
             label="Name:"
@@ -341,8 +330,8 @@
               style="width:300px; margin-left:auto;margin-right:auto;"
             ></b-form-input>
           </b-form-group>
-          <a href="#" style="width:300px" class="btn btn-sm animated-button thar-two"  @click="submitDeleteArtist()" >Submit</a>
-          <a href="#" style="width:300px" class="btn btn-sm animated-button thar-two-red" @click="onResetDeleteArtist()">Reset</a>
+          <a href="#" style="width:300px; margin-top: 7px" class="btn btn-sm animated-button thar-two"  @click="submitDeleteArtist()" >Submit</a>
+          <a href="#" style="width:300px; margin-top: 7px" class="btn btn-sm animated-button thar-two-red" @click="onResetDeleteArtist()">Reset</a>
         </b-form>
       </div>
 
@@ -374,6 +363,8 @@
 
 
 
+    
+    
     <div class="container" id="eventsView" v-if="!show">
       <div class="row">
       <div class="col-lg-4 col-md-6 mb-4" v-for="(event) in events" :key="event.id" style="width:75%; margin-left:auto;margin-right:auto;">
@@ -386,9 +377,14 @@
           <div class="card-body">
             <h5 style="color: #000" class="card-title">{{ event.name }}</h5>
             <p class="card-text">
-              <div v-for="(artist) in event.artists" :key="artist.id">
-                <h5 style="color: #000">{{ artist.name }}</h5>
-              </div>
+
+                 <ul class="navigation">
+                  <a class="main">Artists</a>
+                    <li :class=varName(index) v-for="(artist, index) in event.artists" :key="artist.id"><a>{{ artist.name }}</a></li>
+
+                </ul>
+
+  
               <h6 style="color: #000">{{ event.city }}</h6>
               <h6 style="color: #000">{{ event.place }}</h6>
               <h6 style="color: #000">{{ event.date }}</h6>
@@ -399,10 +395,10 @@
 
           <div class="container" style="background-color: transparent; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.125); border-top:0px; border-color: #000">
             <h6 style="margin-bottom: 0rem">Tickets disponibles: {{ event.total_available_tickets }}</h6>
-              <a href="#popup1" style="margin-top: 10px; margin-bottom:1.5rem" v-if="!is_admin && logged" class="btn btn-sm animated-button thar-two" :disabled="disAddCart(event)" @click="addToCart(event)">Add to cart</a>
+              <a href="#" style="margin-top: 10px; margin-bottom:1.5rem" v-if="!is_admin && logged" class="btn btn-sm animated-button thar-two" :disabled="disAddCart(event)" @click="addToCart(event)">Add to cart</a>
               
-              <a href="#" v-if="is_admin" style="width:auto" class="btn btn-sm animated-button thar-two" @click="showAddArtistForm(event)"> Add Artist to Event </a>
-              <a href="#" v-if="is_admin" style="width:auto" class="btn btn-sm animated-button thar-two-red" @click="showDeleteArtistForm(event)"> Delete Artist in Event </a>
+              <a href="#" v-if="is_admin" style="width:auto; margin-top: 7px" class="btn btn-sm animated-button thar-two" @click="showAddArtistForm(event)"> Add Artist to Event </a>
+              <a href="#" v-if="is_admin" style="width:auto; margin-top: 7px" class="btn btn-sm animated-button thar-two-red" @click="showDeleteArtistForm(event)"> Delete Artist in Event </a>
 
           </div>
         </div>
@@ -460,7 +456,7 @@
             </h5>
           </td>
           <td>{{ event.price }}</td>
-          <td>{{ event.price * quantity_events_added[event.name]}}</td>
+          <td>{{ event.price * quantity_events_added[event.name] }}</td>
           <td>
             <button class="skewBtnR brick" style="width:auto" @click="deleteTicket(event)">Delete ticket</button>
           </td>
@@ -497,6 +493,12 @@ export default {
       logged: false,
       username: "",
       token: '',
+      dataType: "n1",
+
+      total_price: 0,
+
+
+
       newEventForm: {name : "", price : 0,date : "",city : "",place : "", tickets: 0},
       show_form_new_event : false,
       show_form_update_event : false,
@@ -529,6 +531,23 @@ export default {
   },
 
   methods: {
+    varName(index){
+      if(index == 0){
+        return "n1"
+      }
+      else if(index == 1){
+        return "n2"
+      }
+      else if(index == 2){
+        return "n3"
+      }
+      else if(index == 3){
+        return "n4"
+      }
+      else{
+        return "n5"
+      }
+    },
     getEvents () {
       const path = 'http://localhost:5000/events'
       axios.get(path)
@@ -547,8 +566,8 @@ export default {
 
 	    axios.get(path)
 	    .then((res) => {
-        this.is_admin = res.data.is_admin
-        this.money_available = res.data.available_money
+        this.is_admin = res.data.account.is_admin
+        this.money_available = res.data.account.available_money
 	    })
 	    .catch((error) => {
 	      console.error(error)
@@ -627,8 +646,9 @@ export default {
     },
 
     addTicket(event) {
-      if (event.price <= this.money_available) {
+      if (event.price * this.quantity_events_added[event.name] < this.money_available) {
         this.showCartView(false),
+
         this.quantity_events_added[event.name] += 1,
         this.tickets_bought += 1,
 
@@ -740,31 +760,50 @@ export default {
     },
 
     disAddCart(event){
-      if(event.total_available_tickets == 0 || this.isEventInCart(event)){
+      if(event.total_available_tickets == 0 || this.isEventInCart(event || this.money_available < event.price)){
         return true
       }
       return false
     },
 
     showAddNewEvent(boolean) {
-
       this.show_form_new_event = boolean
+
+      this.show_form_update_event = false
+      this.show_form_add_artist = false
+      this.show_form_delete_artist = false
+
       this.onReset()
     },
 
     showUpdateEvent(boolean) {
 
       this.show_form_update_event = boolean
+
+      this.show_form_new_event = false
+      this.show_form_add_artist = false
+      this.show_form_delete_artist = false
+
       this.onResetUpdate()
     },
 
     showDeleteArtist(boolean) {
       this.show_form_delete_artist = boolean
+
+      this.show_form_new_event = false
+      this.show_form_update_event = false
+      this.show_form_add_artist = false
+
       this.onResetDeleteArtist()
     },
 
     showAddArtist(boolean) {
       this.show_form_add_artist = boolean
+
+      this.show_form_new_event = false
+      this.show_form_update_event = false
+      this.show_form_delete_artist = false
+
       this.onResetAddArtistInEvent()
     },
 
@@ -960,6 +999,7 @@ export default {
           //this.id_artist = res.data.id_artist
           console.log(res.data.id_artist)
           this.addArtistInEvent(res.data.id_artist)
+
           
           //this.getEvents()
           //this.showAddArtist(false)
@@ -991,7 +1031,7 @@ export default {
       }).then(() => {
           console.log('Artist added to event')
           //this.getEvents()
-          //this.showAddArtist(false)
+          this.showAddArtist(false)
 
         })
         .catch((error) => {
@@ -1003,8 +1043,6 @@ export default {
         })
     },
   },
-
-  
 }
 
 </script>
