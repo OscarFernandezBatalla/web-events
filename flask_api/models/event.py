@@ -47,8 +47,11 @@ class EventModel(db.Model):
             return {"message": "Error Description"}, 500
 
     def delete_from_db(self):
-        db.session.delete(self)
-        db.commit()
+        try:
+            db.session.delete(self)
+            db.session.commit()
+        except:
+            db.session.rollback()
 
     def delete_artist(self, artist):
         self.artists.remove(artist)
@@ -74,6 +77,10 @@ class EventModel(db.Model):
     @classmethod
     def find_by_event_id_artist_id(cls, id):
         return cls.query.filter(cls.id == id).artists.filter.first()
+
+    @classmethod
+    def find_duplicated_event(cls, name, date, city):
+        return cls.query.filter(cls.name == name).filter(cls.date == date).filter(cls.city == city).first()
 
     @classmethod
     def find_by_name(cls, name):

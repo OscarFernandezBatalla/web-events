@@ -143,6 +143,7 @@
       <h3>UPDATE EVENT</h3>
       <button class="btn btn-lg btn-blue-cross fixed" type="submit" @click="showUpdateEvent(false)" style="float:right">X</button>
         <b-form style="color: #FFF">
+        
           <b-form-group
             id="input-group-0"
             label="Id:"
@@ -150,10 +151,10 @@
             style="width:300px; margin-left:auto;margin-right:auto;">
             <b-form-input
               id="input-0"
-              type="text"
+              type="number"
               v-model="editEventForm.id"
               required
-              placeholder="Enter id"
+              placeholder="Enter event id"
               style="width:300px; margin-left:auto;margin-right:auto;"
             ></b-form-input>
           </b-form-group>
@@ -375,30 +376,30 @@
 
           <img class="card-img-top" v-bind:src="loadImage(event)" alt="Card image cap" id="card_img" style="height: 150px; border: 1px solid rgba(0, 0, 0, 0.125); border-bottom:0px; border-color: #000">
           <div class="card-body">
-            <h5 style="color: #000" class="card-title">{{ event.name }}</h5>
+            <h5 style="color: #F7CA18" class="card-title">{{ event.name }}</h5>
             <p class="card-text">
 
                  <ul class="navigation">
-                  <a class="main">Artists</a>
+                  <a class="main">ARTISTS</a>
                     <li :class=varName(index) v-for="(artist, index) in event.artists" :key="artist.id"><a>{{ artist.name }}</a></li>
 
                 </ul>
 
   
-              <h6 style="color: #000">{{ event.city }}</h6>
-              <h6 style="color: #000">{{ event.place }}</h6>
-              <h6 style="color: #000">{{ event.date }}</h6>
-              <h6 style="color: #000">{{ event.price }} €</h6>
+              <h6 style="color: #FFF">{{ event.city }}</h6>
+              <h6 style="color: #FFF">{{ event.place }}</h6>
+              <h6 style="color: #FFF">{{ event.date }}</h6>
+              <h6 style="color: #FFF">{{ event.price }} €</h6>
             </p>
           </div>
 
 
-          <div class="container" style="background-color: transparent; padding: 10px; border: 1px solid rgba(0, 0, 0, 0.125); border-top:0px; border-color: #000">
+          <div class="container" style="background-color: transparent; padding: 10px; border: 2px solid rgba(0, 0, 0, 0.125); border-bottom:0px; border-right:0px; border-left:0px;border-color: #F7CA18">
             <h6 style="margin-bottom: 0rem">Tickets disponibles: {{ event.total_available_tickets }}</h6>
-              <a href="#" style="margin-top: 10px; margin-bottom:1.5rem" v-if="!is_admin && logged" class="btn btn-sm animated-button thar-two" :disabled="disAddCart(event)" @click="addToCart(event)">Add to cart</a>
+              <a href="#" style="margin-top: 10px; margin-bottom:1.5rem; height:50px" v-if="!is_admin && logged" class="btn btn-sm animated-button thar-two" :disabled="disAddCart(event)" @click="addToCart(event)">Add to cart</a>
               
-              <a href="#" v-if="is_admin" style="width:auto; margin-top: 7px" class="btn btn-sm animated-button thar-two" @click="showAddArtistForm(event)"> Add Artist to Event </a>
-              <a href="#" v-if="is_admin" style="width:auto; margin-top: 7px" class="btn btn-sm animated-button thar-two-red" @click="showDeleteArtistForm(event)"> Delete Artist in Event </a>
+              <a href="#" v-if="is_admin" style="width:auto; margin-top: 7px; height:50px" class="btn btn-sm animated-button thar-two" @click="showAddArtistForm(event)"> Add Artist to Event </a>
+              <a href="#" v-if="is_admin" style="width:auto; margin-top: 7px; height:50px" class="btn btn-sm animated-button thar-two-red" @click="showDeleteArtistForm(event)"> Delete Artist in Event </a>
 
           </div>
         </div>
@@ -555,7 +556,7 @@ export default {
           this.events = res.data.events
         })
         .catch((error) => {
-          console.error(error)
+          console.error(error) 
         })
     },
     
@@ -614,6 +615,7 @@ export default {
           // eslint-disable-next-line
 
           console.log(error)
+          alert(error.response.data.message)
           this.getEvents()
         })
     },
@@ -828,6 +830,7 @@ export default {
           console.log('Event added')
           this.getEvents()
           this.showAddNewEvent(false)
+          alert("New Event Added")
 
         })
         .catch((error) => {
@@ -835,6 +838,7 @@ export default {
           // eslint-disable-next-line
 
           console.log(error)
+          alert(error.response.data.message)
           //this.getEvents()
         })
     },
@@ -845,20 +849,24 @@ export default {
     },
 
     submitDeleteArtist() {
-
-
       var path = 'http://localhost:5000/event/'
-      path = path.concat(this.event_to_modify.event.id,'/artists')
+      path = path.concat(this.event_to_modify.id,'/artists')
 
       axios.get(path, {
         auth: {username: this.token}
       }).then((res) => {
           var artists = res.data.artists
+          var deleted = false
 
           for (let i = 0; i < artists.length; i += 1) {
             if (this.form_delete_artist.name == artists[i]['name']){
               this.deleteArtist(artists[i]['id'])
+              deleted = true
             }
+          }
+          
+          if (!deleted){
+            alert("Artist not exists in event")
           }
 
           this.getEvents()
@@ -881,7 +889,7 @@ export default {
     deleteArtist(id_artist){
 
       var path = 'http://localhost:5000/event/'
-      path = path.concat(this.event_to_modify.event.id, '/artist/', id_artist)
+      path = path.concat(this.event_to_modify.id, '/artist/', id_artist)
 
       axios.delete(path, {
         auth: {username: this.token}
@@ -889,6 +897,7 @@ export default {
           console.log('Artist deleted')
           this.getEvents()
           this.showDeleteArtist(false)
+          alert("Artist deleted")
 
         })
         .catch((error) => {
@@ -896,19 +905,19 @@ export default {
           // eslint-disable-next-line
 
           console.log(error)
+          alert(error.response.data.message)
           //this.getEvents()
         })
 
     },
 
     submitUpdate() {
-      const path = 'http://localhost:5000/event'
-      //var path2 = path.concat(this.username)
+      const path = 'http://localhost:5000/event/'
+      var path2 = path.concat(this.editEventForm.id)
 
       //console.log("user")
       //console.log(this.username)
       const parameters = {
-          id: this.editEventForm.id,
           name: this.editEventForm.name,
           price: this.editEventForm.price,
           date: this.editEventForm.date,
@@ -917,12 +926,13 @@ export default {
           total_available_tickets: this.editEventForm.tickets
         }
 
-      axios.put(path, parameters, {
+      axios.put(path2, parameters, {
         auth: {username: this.token}
       }).then(() => {
           console.log('Event updated')
           this.getEvents()
           this.showUpdateEvent(false)
+          alert("Event Updated")
 
         })
         .catch((error) => {
@@ -930,6 +940,7 @@ export default {
           // eslint-disable-next-line
 
           console.log(error)
+          alert(error.response.data.message)
           //this.getEvents()
         })
     },
@@ -997,8 +1008,9 @@ export default {
         auth: {username: this.token}
       }).then((res) => {
           //this.id_artist = res.data.id_artist
-          console.log(res.data.id_artist)
-          this.addArtistInEvent(res.data.id_artist)
+          this.addArtistInEvent(res.data.artist.id)
+
+
 
           
           //this.getEvents()
@@ -1006,16 +1018,16 @@ export default {
 
         })
         .catch((error) => {
-
           // eslint-disable-next-line
 
-          console.log(error)
+          alert(error.response.data.message)
+
           //this.getEvents()
         })
     },
 
     addArtistInEvent(id_artist){
-      const path = 'http://localhost:5000/event/'
+      const path = 'http://localhost:5000/event2/'
       var path2 = path.concat(this.event_to_modify.id, '/artist')
 
       //console.log("user")
@@ -1029,9 +1041,10 @@ export default {
       axios.post(path2, parameters, {
         auth: {username: this.token}
       }).then(() => {
-          console.log('Artist added to event')
-          //this.getEvents()
+          this.getEvents()
           this.showAddArtist(false)
+          alert("Artist Added to Event")
+
 
         })
         .catch((error) => {
@@ -1039,6 +1052,7 @@ export default {
           // eslint-disable-next-line
 
           console.log(error)
+          alert(error.response.data.message)
           //this.getEvents()
         })
     },

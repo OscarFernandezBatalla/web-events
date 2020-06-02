@@ -56,7 +56,7 @@
         ></b-form-input>
       </b-form-group>
 
-	   <a href="#" style="display:inline-block;" class="btn btn-sm animated-button thar-two" :disabled="show" @click="submit()">Submit</a>
+	   <a href="#" style="display:inline-block;" class="btn btn-sm animated-button thar-two" :disabled="emptyFieldsCreateAccount()" @click="submit()">Submit</a>
     	<a href="#" style="display:inline-block;" class="btn btn-sm animated-button thar-two" @click="initForm()">Reset</a>
 
     </b-form>
@@ -181,8 +181,11 @@ export default {
         })
     },
 
-    emptyFields(){
-    	return (this.addUserForm.username == '' && this.addUserForm.username == '')
+    emptyFieldsCreateAccount(){
+    	return (this.addUserForm.username == '' || this.addUserForm.password == '')
+	},
+	emptyFieldsSignIn(){
+    	return (this.input.username == '' || this.input.password == '')
     }
 
   }

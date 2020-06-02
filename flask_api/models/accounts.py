@@ -80,8 +80,11 @@ class AccountsModel(db.Model):
             return {"message": "Error Description"}, 500
 
     def delete_from_db(self):
-        db.session.delete(self)
-        db.commit()
+        try:
+            db.session.delete(self)
+            db.session.commit()
+        except:
+            db.session.rollback()
 
     def get_available_money(self):
         return self.available_money

@@ -40,12 +40,16 @@ class Accounts(Resource):
 
     @auth.login_required(role='admin')
     def delete(self, username):
-        orders = OrdersModel.find_by_username(username)
-        for order in orders:
-            order.delete_from_db()
-
         account = AccountsModel.find_by_username(username)
-        account.delete_from_db()
+
+        if account:
+            orders = OrdersModel.find_by_username(username)
+            for order in orders:
+                order.delete_from_db()
+            account.delete_from_db()
+            return {"message": "User ['username' : " + account.username + "] deleted"}, 200
+        return {"message": "User with ['username' : " + username + "] Not Found"}, 404
+
 
 
 

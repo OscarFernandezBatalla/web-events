@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from Resources.accounts import Accounts, AccountsList
 from Resources.artist import Artist, ArtistList
-from Resources.event import Event, EventList, EventArtistList, EventArtist, ArtistEventsList
+from Resources.event import Event, EventList, EventArtistList, EventArtist, ArtistEventsList, EventArtist2
 from Resources.login import Login
 from Resources.orders import Orders, OrdersList
 from flask_migrate import Migrate
@@ -43,6 +43,7 @@ api.add_resource(EventList, '/events')
 
 api.add_resource(EventArtistList, '/event/<int:id>/artists')
 api.add_resource(EventArtist, '/event/<int:id_event>/artist/<int:id_artist>', '/event/<int:id_event>/artist')
+api.add_resource(EventArtist2, '/event2/<int:id_event>/artist/<int:id_artist>', '/event2/<int:id_event>/artist')
 #api.add_resource(EventArtist, '/event/<int:id_event>/artist/<id_artist>','/event/<int:id_event>/artist')
 api.add_resource(Orders, '/orders/<string:username>')
 api.add_resource(OrdersList, '/orders')

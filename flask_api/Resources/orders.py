@@ -2,6 +2,8 @@ from flask_restful import Resource, reqparse
 from models.accounts import AccountsModel, auth
 from models.event import EventModel
 from models.orders import OrdersModel
+from flask import g
+
 class Orders(Resource):
 
     def get(self, username):
@@ -12,39 +14,36 @@ class Orders(Resource):
 
     @auth.login_required(role='user')
     def post(self, username):
-        #account_verified = auth.verify_password(g.user.username)
-        #if account_verified:
-        parser = reqparse.RequestParser()  # create parameters parser from request
+        if username == g.user.username:
 
-        # define al input parameters need and its type
-        #parser.add_argument('id', type=int)
-        #parser.add_argument('username', type=db.String(30))
-        parser.add_argument('id_event', type=int)
-        parser.add_argument('tickets_bought', type=int)
-        data = parser.parse_args()
+            parser = reqparse.RequestParser()  # create parameters parser from request
 
-        account = AccountsModel.find_by_username(username)
-        event = EventModel.find_by_id(data.id_event)
+            # define al input parameters need and its type
+            parser.add_argument('id_event', type=int)
+            parser.add_argument('tickets_bought', type=int)
+            data = parser.parse_args()
 
-        money_user = account.get_available_money()
-        price_event = event.get_price()
-        tickets_left = event.get_total_available_tickets()
+            account = AccountsModel.find_by_username(username)
+            event = EventModel.find_by_id(data.id_event)
 
-        if money_user >= price_event * data.tickets_bought and tickets_left - data.tickets_bought >= 0:
-            account.set_available_money(money_user - price_event * data.tickets_bought)
-            event.set_total_available_tickets(tickets_left - data.tickets_bought)
+            money_user = account.get_available_money()
+            price_event = event.get_price()
+            tickets_left = event.get_total_available_tickets()
 
-            order = OrdersModel(data.id_event, data.tickets_bought)
-            account.add_order(order)
+            if money_user >= price_event * data.tickets_bought and tickets_left - data.tickets_bought >= 0:
+                account.set_available_money(money_user - price_event * data.tickets_bought)
+                event.set_total_available_tickets(tickets_left - data.tickets_bought)
 
-            order.save_to_db()
-            event.save_to_db()
-            account.save_to_db()
+                order = OrdersModel(data.id_event, data.tickets_bought)
+                account.add_order(order)
 
-            return order.json(), 200
-        else:
+                order.save_to_db()
+                event.save_to_db()
+                account.save_to_db()
+
+                return {"order" : order.json()}, 201
             return {"message": "Not enough money or tickets"}, 400
-
+        return {"message": "Bad authorization user"}, 400
 """
         with lock.lock:
             account = AccountsModel.find_by_username(username)
